@@ -44,11 +44,11 @@
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --foreground: oklch(0 0 0); /* Alterado para preto puro */
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0 0 0); /* Alterado para preto puro */
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
+  --popover-foreground: oklch(0 0 0); /* Alterado para preto puro */
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
@@ -67,13 +67,16 @@
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
   --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-foreground: oklch(0 0 0); /* Alterado para preto puro */
   --sidebar-primary: oklch(0.205 0 0);
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  
+  /* Nova variável para a cor verde da logo */
+  --logo-green: #22c55e; /* Verde comum, ajuste conforme necessário */
 }
 
 .dark {
@@ -117,4 +120,50 @@
   body {
     @apply bg-background text-foreground;
   }
+  
+  /* Estilos para os botões quando selecionados */
+  button:focus, 
+  .btn:focus,
+  [type="button"]:focus,
+  [type="submit"]:focus {
+    @apply outline-none ring-2 ring-offset-2;
+    ring-color: var(--logo-green);
+  }
+  
+  button:active, 
+  .btn:active,
+  [type="button"]:active,
+  [type="submit"]:active {
+    background-color: var(--logo-green);
+    color: white;
+  }
+  
+  /* Estilo específico para os botões de navegação quando ativos */
+  .nav-btn.active {
+    background-color: var(--logo-green);
+    color: white;
+  }
+}
+
+/* Adicionando estilos específicos para a página de estoque */
+.stock-system {
+  color: black; /* Garante que todo o texto seja preto */
+}
+
+.stock-system h1,
+.stock-system h2,
+.stock-system h3,
+.stock-system p,
+.stock-system li {
+  color: black;
+}
+
+.stock-system button,
+.stock-system .btn {
+  transition: all 0.2s ease;
+}
+
+.stock-system button:hover,
+.stock-system .btn:hover {
+  opacity: 0.9;
 }
