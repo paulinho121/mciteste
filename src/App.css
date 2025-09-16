@@ -75,8 +75,9 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
   
-  /* Nova variável para a cor verde da logo */
-  --logo-green: #22c55e; /* Verde comum, ajuste conforme necessário */
+  /* Nova variável para a cor da logo (verde-azulado/teal) */
+  --logo-color: #14b8a6; /* Cor teal-500 que combina com a logomarca */
+  --logo-color-hover: #0d9488; /* Versão mais escura para hover */
 }
 
 .dark {
@@ -127,21 +128,46 @@
   [type="button"]:focus,
   [type="submit"]:focus {
     @apply outline-none ring-2 ring-offset-2;
-    ring-color: var(--logo-green);
+    ring-color: var(--logo-color);
   }
   
   button:active, 
   .btn:active,
   [type="button"]:active,
   [type="submit"]:active {
-    background-color: var(--logo-green);
+    background-color: var(--logo-color);
     color: white;
   }
   
   /* Estilo específico para os botões de navegação quando ativos */
   .nav-btn.active {
-    background-color: var(--logo-green);
+    background-color: var(--logo-color);
     color: white;
+  }
+  
+  /* Estilos para os tabs do shadcn/ui */
+  [data-state="active"] {
+    background-color: var(--logo-color) !important;
+    color: white !important;
+  }
+  
+  /* Hover nos botões */
+  button:hover:not(:disabled),
+  .btn:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+  
+  /* Estilos específicos para TabsTrigger quando ativo */
+  [role="tab"][data-state="active"] {
+    background-color: var(--logo-color) !important;
+    color: white !important;
+    border-color: var(--logo-color) !important;
+  }
+  
+  /* Hover para TabsTrigger */
+  [role="tab"]:hover {
+    background-color: var(--logo-color-hover) !important;
+    color: white !important;
   }
 }
 

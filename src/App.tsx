@@ -21,13 +21,14 @@ export default function App() {
               <img 
                 src={logo.src} 
                 alt="Logo" 
-                className="h-10 w-auto max-h-10 object-contain" 
+                className="h-8 w-auto max-h-8 sm:h-10 sm:max-h-10 object-contain" 
               />
-              <h1 className="text-2xl font-bold text-gray-900">
-                Sistema de Estoque
+              <h1 className="text-lg sm:text-2xl font-bold text-gray-900">
+                <span className="hidden sm:inline">Sistema de Estoque</span>
+                <span className="sm:hidden">Estoque</span>
               </h1>
             </div>
-            <div className="text-sm text-gray-500">
+            <div className="text-xs sm:text-sm text-gray-500 hidden md:block">
               Gestão de Produtos e Inventário
             </div>
           </div>
