@@ -6,7 +6,7 @@
   },
   "framework": "nextjs",
   "functions": {
-    "api/**/*.ts": {
+    "api/**/*.js": {
       "runtime": "nodejs18.x"
     }
   }
