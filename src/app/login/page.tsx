@@ -99,7 +99,7 @@ export default function LoginPage() {
             Acesso restrito para super usuários
           </p>
         </CardHeader>
-        <CardContent>
+        <CardContent className="">
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email" className="text-sm font-medium">
@@ -112,7 +112,7 @@ export default function LoginPage() {
                   type="email"
                   placeholder="Digite seu email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                   className="pl-10"
                   required
                 />
@@ -130,7 +130,7 @@ export default function LoginPage() {
                   type={showPassword ? "text" : "password"}
                   placeholder="Digite sua senha"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                   className="pl-10 pr-10"
                   required
                 />
@@ -149,15 +149,17 @@ export default function LoginPage() {
             </div>
 
             {error && (
-              <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
+              <Alert variant="destructive" className="">
+                <AlertDescription className="">{error}</AlertDescription>
               </Alert>
             )}
 
-            <Button 
-              type="submit" 
-              className="w-full" 
+            <Button
+              type="submit"
+              className="w-full"
               disabled={loading}
+              variant="default"
+              size="default"
               style={{ backgroundColor: 'var(--logo-color)' }}
             >
               {loading ? 'Entrando...' : 'Entrar'}
