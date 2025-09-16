@@ -71,7 +71,7 @@ export default function UploadPlanilha() {
         })
       }, 200)
 
-      const response = await fetch('/api/produtos/upload', {
+      const response = await fetch("/api/upload-planilha", {
         method: 'POST',
         body: formData
       })
