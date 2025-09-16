@@ -1,0 +1,13 @@
+{
+  "build": {
+    "env": {
+      "COREPACK_ENABLE": "1"
+    }
+  },
+  "framework": "nextjs",
+  "functions": {
+    "api/**/*.ts": {
+      "runtime": "nodejs18.x"
+    }
+  }
+}
