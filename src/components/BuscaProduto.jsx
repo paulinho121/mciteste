@@ -97,17 +97,17 @@ export default function BuscaProduto() {
                       Estoque por Filial
                     </h5>
                     <div className="space-y-1 text-sm">
-                      <div className="flex justify-between">
-                        <span>Ceará:</span>
-                        <span className="font-medium">{produto.ceara}</span>
+                      <div className="flex justify-between items-center p-2 rounded-md bg-orange-50 border-l-4 border-orange-400">
+                        <span className="text-orange-800 font-medium">Ceará:</span>
+                        <span className="font-bold text-orange-700 bg-orange-100 px-2 py-1 rounded">{produto.ceara}</span>
                       </div>
-                      <div className="flex justify-between">
-                        <span>Santa Catarina:</span>
-                        <span className="font-medium">{produto.santa_catarina}</span>
+                      <div className="flex justify-between items-center p-2 rounded-md bg-blue-50 border-l-4 border-blue-400">
+                        <span className="text-blue-800 font-medium">Santa Catarina:</span>
+                        <span className="font-bold text-blue-700 bg-blue-100 px-2 py-1 rounded">{produto.santa_catarina}</span>
                       </div>
-                      <div className="flex justify-between">
-                        <span>São Paulo:</span>
-                        <span className="font-medium">{produto.sao_paulo}</span>
+                      <div className="flex justify-between items-center p-2 rounded-md bg-purple-50 border-l-4 border-purple-400">
+                        <span className="text-purple-800 font-medium">São Paulo:</span>
+                        <span className="font-bold text-purple-700 bg-purple-100 px-2 py-1 rounded">{produto.sao_paulo}</span>
                       </div>
                     </div>
                   </div>
