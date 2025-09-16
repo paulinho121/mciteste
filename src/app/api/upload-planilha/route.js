@@ -1,11 +1,6 @@
 
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '../../../lib/supabase.js';
 import Papa from 'papaparse';
-
-const supabaseUrl = 'https://acwcvqwsvcygmxxqhung.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjd2N2cXdzdmN5Z214eHFodW5nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc3MTc1NDEsImV4cCI6MjA3MzI5MzU0MX0.uP1bW15K9qVprm_pXhunGzawmpasYQ1Jbcsyk5LJYjc';
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export async function POST(request) {
   try {
@@ -34,52 +29,46 @@ export async function POST(request) {
             RESERVA: parseInt(row['RESERVA']) || 0,
           }));
 
-          let produtos_inseridos = 0;
-          let produtos_atualizados = 0;
-
-          for (const produto of produtos) {
-            const { data: existingProduct, error: fetchError } = await supabase
+          try {
+            // Primeiro, deletar todos os produtos existentes
+            const { error: deleteError } = await supabase
               .from('produtos')
-              .select('COD')
-              .eq('COD', produto.COD)
-              .single();
+              .delete()
+              .neq('COD', ''); // Deleta todos os registros (usando uma condição que sempre é verdadeira)
 
-            if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116 means no rows found
-              console.error('Erro ao buscar produto existente:', fetchError);
-              continue;
+            if (deleteError) {
+              console.error('Erro ao deletar produtos existentes:', deleteError);
+              resolve(new Response(JSON.stringify({ 
+                error: 'Erro ao limpar dados existentes.' 
+              }), { status: 500 }));
+              return;
             }
 
-            if (existingProduct) {
-              // Produto existe, atualizar
-              const { error: updateError } = await supabase
-                .from('produtos')
-                .update(produto)
-                .eq('COD', produto.COD);
+            // Depois, inserir todos os novos produtos
+            const { data, error: insertError } = await supabase
+              .from('produtos')
+              .insert(produtos);
 
-              if (updateError) {
-                console.error('Erro ao atualizar produto:', updateError);
-              } else {
-                produtos_atualizados++;
-              }
-            } else {
-              // Produto não existe, inserir
-              const { error: insertError } = await supabase
-                .from('produtos')
-                .insert(produto);
-
-              if (insertError) {
-                console.error('Erro ao inserir produto:', insertError);
-              } else {
-                produtos_inseridos++;
-              }
+            if (insertError) {
+              console.error('Erro ao inserir novos produtos:', insertError);
+              resolve(new Response(JSON.stringify({ 
+                error: 'Erro ao inserir novos dados.' 
+              }), { status: 500 }));
+              return;
             }
+
+            resolve(new Response(JSON.stringify({
+              message: 'Planilha processada com sucesso! Todos os dados foram substituídos.',
+              produtos_inseridos: produtos.length,
+              produtos_removidos: 'Todos os dados anteriores foram removidos',
+            }), { status: 200 }));
+
+          } catch (error) {
+            console.error('Erro durante o processamento:', error);
+            resolve(new Response(JSON.stringify({ 
+              error: 'Erro durante o processamento dos dados.' 
+            }), { status: 500 }));
           }
-
-          resolve(new Response(JSON.stringify({
-            message: 'Planilha processada com sucesso!',
-            produtos_inseridos,
-            produtos_atualizados,
-          }), { status: 200 }));
         },
         error: (err) => {
           resolve(new Response(JSON.stringify({ error: `Erro ao analisar CSV: ${err.message}` }), { status: 400 }));
