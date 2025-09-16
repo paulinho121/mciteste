@@ -46,7 +46,7 @@ export default function BuscaProduto() {
   }
 
   return (
-    <div className="space-y-6">
+  <div className="space-y-6">
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -63,7 +63,11 @@ export default function BuscaProduto() {
               onKeyPress={handleKeyPress}
               className="flex-1"
             />
-            <Button onClick={buscarProdutos} disabled={carregando}>
+            <Button
+              onClick={buscarProdutos}
+              disabled={carregando}
+              className="bg-[#25ccb8] hover:bg-[#1fa99a] text-white"
+            >
               {carregando ? 'Buscando...' : 'Buscar'}
             </Button>
           </div>
