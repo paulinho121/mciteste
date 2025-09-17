@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: mciteste
+    runtime: node
+    plan: free
+    buildCommand: "pnpm install && pnpm build"
+    startCommand: "pnpm start"
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        value: https://acwcvqwsvcygmxxqhung.supabase.co
+      - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjd2N2cXdzdmN5Z214eHFodW5nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc3MTc1NDEsImV4cCI6MjA3MzI5MzU0MX0.uP1bW15K9qVprm_pXhunGzawmpasYQ1Jbcsyk5LJYjc
