@@ -20,7 +20,7 @@ export async function GET(request) {
     }
 
     // Normalizar nomes das chaves para camelCase para consistência com o frontend
-    const produtosNormalizados = data.map(produto => ({
+    let produtosNormalizados = data.map(produto => ({
       cod: produto.COD,
       nome_do_produto: produto['NOME DO PRODUTO'],
       marca: produto.MARCA,
@@ -31,11 +31,15 @@ export async function GET(request) {
       reserva: produto.RESERVA,
     }));
 
+    // Filtrar produtos cujo código termina com ".0"
+    produtosNormalizados = produtosNormalizados.filter(produto => {
+        // Garantir que o código é uma string antes de verificar
+        return typeof produto.cod === 'string' && !produto.cod.endsWith('.0');
+    });
+
     return new Response(JSON.stringify(produtosNormalizados), { status: 200 });
   } catch (error) {
     console.error('Erro geral na API de busca:', error);
     return new Response(JSON.stringify({ error: 'Erro interno do servidor.' }), { status: 500 });
   }
 }
-
-
