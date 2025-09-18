@@ -68,7 +68,7 @@ export default function Header() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button size="sm" className="flex items-center space-x-2 bg-[#25ccb8] hover:bg-[#1fa99a] text-white">
-                    <User className="h-4 w-4" />
+                    <User className="h-4 w-4 text-[#DCDCDC]" />
                     <span className="hidden sm:inline">Perfil</span>
                   </Button>
                 </DropdownMenuTrigger>
