@@ -71,7 +71,7 @@ export default function CadastroReserva() {
             onChange={(e) => setQuantidade(e.target.value)}
           />
         </div>
-        <div className="flex gap-2">
+        <div className="space-y-2">
           <Button
             onClick={() => handleReserva('cadastrar')}
             disabled={carregando}
