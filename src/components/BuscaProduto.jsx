@@ -47,7 +47,7 @@ export default function BuscaProduto() {
 
   return (
   <div className="space-y-6">
-      <Card>
+      <Card className="border-[#DCDCDC]">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Search className="h-5 w-5" />
@@ -66,7 +66,7 @@ export default function BuscaProduto() {
             <Button
               onClick={buscarProdutos}
               disabled={carregando}
-              className="bg-[#25ccb8] hover:bg-[#1fa99a] text-white"
+              className="bg-[#DCDCDC] hover:bg-gray-300 text-black"
             >
               {carregando ? 'Buscando...' : 'Buscar'}
             </Button>
@@ -144,4 +144,3 @@ export default function BuscaProduto() {
     </div>
   )
 }
-
