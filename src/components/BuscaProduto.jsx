@@ -78,7 +78,7 @@ export default function BuscaProduto() {
       </Card>
 
       {produtos.length > 0 && (
-        <div className="space-y-4">
+        <div className="space-y-4 bg-[#DCDCDC] p-4 rounded-lg">
           <h3 className="text-lg font-semibold">Resultados da Busca</h3>
           {produtos.map((produto) => (
             <Card key={produto.cod} className="hover:shadow-md transition-shadow">
