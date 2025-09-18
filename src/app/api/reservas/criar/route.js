@@ -1,3 +1,4 @@
+
 import { supabase } from '../../../../lib/supabase';
 
 export async function POST(request) {
@@ -11,7 +12,6 @@ export async function POST(request) {
     let produtosEncontrados;
     let fetchError;
 
-    // Primeiro, tenta encontrar pelo código exato se o identificador for um número.
     if (/^\d+$/.test(identificador)) {
       const { data, error } = await supabase
         .from('produtos')
@@ -20,14 +20,11 @@ export async function POST(request) {
       
       produtosEncontrados = data;
       fetchError = error;
-    }
-    
-    // Se não encontrou pelo código ou se não era um número, busca pelo nome.
-    if (fetchError || !produtosEncontrados || produtosEncontrados.length === 0) {
+    } else {
       const { data, error } = await supabase
         .from('produtos')
         .select('COD, RESERVA')
-        .ilike('NOME_DO_PRODUTO', `%${identificador}%`);
+        .ilike('NOME DO PRODUTO', `%${identificador}%`);
       
       produtosEncontrados = data;
       fetchError = error;
@@ -57,13 +54,6 @@ export async function POST(request) {
       RESERVA: novaReserva,
     };
 
-    // Atualiza o timestamp se uma reserva for adicionada, ou limpa se for zerada.
-    if (reserva > 0) {
-      updateData.reserva_criada_em = new Date().toISOString();
-    } else if (novaReserva === 0) {
-      updateData.reserva_criada_em = null;
-    }
-
     const { error: updateError } = await supabase
       .from('produtos')
       .update(updateData)
@@ -71,7 +61,8 @@ export async function POST(request) {
 
     if (updateError) {
       console.error('Erro ao atualizar a reserva no Supabase:', updateError);
-      return new Response(JSON.stringify({ error: 'Erro ao atualizar a reserva.' }), { status: 500 });
+      const errorMessage = updateError.message || 'Erro ao atualizar a reserva.';
+      return new Response(JSON.stringify({ error: `Erro na atualização: ${errorMessage}` }), { status: 500 });
     }
 
     const action = reserva > 0 ? 'criada/atualizada' : 'cancelada';
