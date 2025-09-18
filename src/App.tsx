@@ -21,7 +21,7 @@ export default function App() {
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:grid-cols-3">
-              <TabsTrigger value="busca" className="flex items-center gap-2" style={{ backgroundColor: '#DCDCDC' }}>
+              <TabsTrigger value="busca" className="flex items-center gap-2 bg-[#DCDCDC]">
                 <Search className="h-4 w-4" />
                 <span className="hidden sm:inline">Buscar Produtos</span>
                 <span className="sm:hidden">Buscar</span>

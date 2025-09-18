@@ -147,8 +147,8 @@
   
   /* Estilos para os tabs do shadcn/ui */
   [data-state="active"] {
-    background-color: var(--logo-color) !important;
-    color: white !important;
+    background-color: #DCDCDC !important;
+    color: black !important;
   }
   
   /* Hover nos botões */
@@ -159,15 +159,15 @@
   
   /* Estilos específicos para TabsTrigger quando ativo */
   [role="tab"][data-state="active"] {
-    background-color: var(--logo-color) !important;
-    color: white !important;
-    border-color: var(--logo-color) !important;
+    background-color: #DCDCDC !important;
+    color: black !important;
+    border-color: #DCDCDC !important;
   }
   
   /* Hover para TabsTrigger */
   [role="tab"]:hover {
-    background-color: var(--logo-color-hover) !important;
-    color: white !important;
+    background-color: #C0C0C0 !important;
+    color: black !important;
   }
 }
 

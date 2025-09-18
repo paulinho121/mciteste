@@ -66,7 +66,7 @@ export default function BuscaProduto() {
             <Button
               onClick={buscarProdutos}
               disabled={carregando}
-              className="bg-[#DCDCDC] hover:bg-gray-300 text-black"
+              className="bg-[#DCDCDC] hover:bg-[#C0C0C0] text-black"
             >
               {carregando ? 'Buscando...' : 'Buscar'}
             </Button>
