@@ -133,6 +133,14 @@ export default function BuscaProduto() {
                           {produto.total - produto.reserva}
                         </span>
                       </div>
+                      <div className="flex justify-between">
+                        <span>Em importação:</span>
+                        <span className="font-medium text-gray-600">{produto.quantidade_em_importacao}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Data prevista da reposição:</span>
+                        <span className="font-medium text-gray-600">{produto.data_prevista_reposicao}</span>
+                      </div>
                     </div>
                   </div>
                 </div>

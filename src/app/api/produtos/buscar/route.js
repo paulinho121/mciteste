@@ -29,6 +29,8 @@ export async function GET(request) {
       sao_paulo: produto['SÃO PAULO'],
       total: produto.TOTAL,
       reserva: produto.RESERVA,
+      quantidade_em_importacao: produto['QUANTIDADE EM IMPORTAÇÃO'],
+      data_prevista_reposicao: produto['DATA PREVISTA DA REPOSIÇÃO']
     }));
 
     // Filtrar produtos cujo código termina com ".0"
