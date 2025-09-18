@@ -125,7 +125,7 @@ export default function BuscaProduto() {
                       </div>
                       <div className="flex justify-between">
                         <span>Reserva:</span>
-                        <span className="font-medium text-orange-600">{produto.reserva}</span>
+                        <span className="font-bold text-orange-600">{produto.reserva}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Disponível:</span>

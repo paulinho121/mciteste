@@ -27,10 +27,13 @@ export async function POST(request) {
     // Calcular a nova quantidade da reserva
     const novaReserva = (produtoAtual.RESERVA || 0) + reserva;
 
-    // Atualizar o produto com a nova quantidade da reserva
+    // Atualizar o produto com a nova quantidade da reserva e o timestamp
     const { error: updateError } = await supabase
       .from('produtos')
-      .update({ RESERVA: novaReserva })
+      .update({ 
+        RESERVA: novaReserva,
+        reserva_criada_em: new Date().toISOString() 
+      })
       .eq('COD', cod);
 
     if (updateError) {
