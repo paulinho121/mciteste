@@ -2,17 +2,17 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { PackagePlus } from 'lucide-react';
+import { PackagePlus, PackageMinus } from 'lucide-react';
 
 export default function CadastroReserva() {
-  const [cod, setCod] = useState('');
-  const [reserva, setReserva] = useState('');
+  const [identificador, setIdentificador] = useState('');
+  const [quantidade, setQuantidade] = useState('');
   const [carregando, setCarregando] = useState(false);
   const [mensagem, setMensagem] = useState('');
   const [erro, setErro] = useState('');
 
-  const handleCadastroReserva = async () => {
-    if (!cod.trim() || !reserva.trim()) {
+  const handleReserva = async (tipo) => {
+    if (!identificador.trim() || !quantidade.trim()) {
       setErro('Preencha todos os campos.');
       return;
     }
@@ -21,23 +21,26 @@ export default function CadastroReserva() {
     setErro('');
     setMensagem('');
 
+    const valorQuantidade = parseInt(quantidade, 10);
+    const quantidadeFinal = tipo === 'cancelar' ? -valorQuantidade : valorQuantidade;
+
     try {
       const response = await fetch('/api/reservas/criar', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ cod, reserva: parseInt(reserva, 10) }),
+        body: JSON.stringify({ identificador, reserva: quantidadeFinal }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        setMensagem(data.message || 'Reserva cadastrada com sucesso!');
-        setCod('');
-        setReserva('');
+        setMensagem(data.message || `Reserva ${tipo === 'cancelar' ? 'cancelada' : 'cadastrada'} com sucesso!`);
+        setIdentificador('');
+        setQuantidade('');
       } else {
-        setErro(data.error || 'Erro ao cadastrar reserva.');
+        setErro(data.error || `Erro ao ${tipo === 'cancelar' ? 'cancelar' : 'cadastrar'} reserva.`);
       }
     } catch (error) {
       setErro('Erro de conexão com o servidor.');
@@ -51,30 +54,41 @@ export default function CadastroReserva() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <PackagePlus className="h-5 w-5" />
-          Cadastrar Reserva
+          Cadastrar/Cancelar Reserva
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
           <Input
-            placeholder="Código do Produto"
-            value={cod}
-            onChange={(e) => setCod(e.target.value)}
+            placeholder="Código ou Nome do Produto"
+            value={identificador}
+            onChange={(e) => setIdentificador(e.target.value)}
           />
           <Input
-            placeholder="Quantidade a ser reservada"
+            placeholder="Quantidade"
             type="number"
-            value={reserva}
-            onChange={(e) => setReserva(e.target.value)}
+            value={quantidade}
+            onChange={(e) => setQuantidade(e.target.value)}
           />
         </div>
-        <Button
-          onClick={handleCadastroReserva}
-          disabled={carregando}
-          className="w-full bg-[#DCDCDC] hover:bg-[#C0C0C0] text-black"
-        >
-          {carregando ? 'Cadastrando...' : 'Cadastrar Reserva'}
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            onClick={() => handleReserva('cadastrar')}
+            disabled={carregando}
+            className="w-full bg-green-500 hover:bg-green-600 text-white"
+          >
+            <PackagePlus className="h-4 w-4 mr-2" />
+            {carregando ? 'Processando...' : 'Cadastrar Reserva'}
+          </Button>
+          <Button
+            onClick={() => handleReserva('cancelar')}
+            disabled={carregando}
+            className="w-full bg-red-500 hover:bg-red-600 text-white"
+          >
+            <PackageMinus className="h-4 w-4 mr-2" />
+            {carregando ? 'Processando...' : 'Cancelar Reserva'}
+          </Button>
+        </div>
         {erro && <p className="text-red-500 text-sm mt-2">{erro}</p>}
         {mensagem && <p className="text-green-500 text-sm mt-2">{mensagem}</p>}
       </CardContent>

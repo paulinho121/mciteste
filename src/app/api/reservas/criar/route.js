@@ -1,50 +1,84 @@
 import { supabase } from '../../../../lib/supabase';
 
 export async function POST(request) {
-  const { cod, reserva } = await request.json();
+  const { identificador, reserva } = await request.json();
 
-  if (!cod || !reserva) {
-    return new Response(JSON.stringify({ error: 'Código do produto e quantidade são obrigatórios.' }), { status: 400 });
-  }
-
-  if (typeof reserva !== 'number' || reserva <= 0) {
-    return new Response(JSON.stringify({ error: 'A quantidade da reserva deve ser um número positivo.' }), { status: 400 });
+  if (!identificador || typeof reserva !== 'number') {
+    return new Response(JSON.stringify({ error: 'O identificador do produto e a quantidade são obrigatórios.' }), { status: 400 });
   }
 
   try {
-    // Primeiro, buscar o produto para obter a reserva atual
-    const { data: produtoAtual, error: fetchError } = await supabase
-      .from('produtos')
-      .select('RESERVA')
-      .eq('COD', cod)
-      .single();
+    let produtosEncontrados;
+    let fetchError;
 
-    if (fetchError || !produtoAtual) {
-      console.error('Erro ao buscar produto ou produto não encontrado:', fetchError);
-      return new Response(JSON.stringify({ error: 'Produto não encontrado.' }), { status: 404 });
+    // Primeiro, tenta encontrar pelo código exato se o identificador for um número.
+    if (/^\d+$/.test(identificador)) {
+      const { data, error } = await supabase
+        .from('produtos')
+        .select('COD, RESERVA')
+        .eq('COD', identificador);
+      
+      produtosEncontrados = data;
+      fetchError = error;
+    }
+    
+    // Se não encontrou pelo código ou se não era um número, busca pelo nome.
+    if (fetchError || !produtosEncontrados || produtosEncontrados.length === 0) {
+      const { data, error } = await supabase
+        .from('produtos')
+        .select('COD, RESERVA')
+        .ilike('NOME_DO_PRODUTO', `%${identificador}%`);
+      
+      produtosEncontrados = data;
+      fetchError = error;
     }
 
-    // Calcular a nova quantidade da reserva
-    const novaReserva = (produtoAtual.RESERVA || 0) + reserva;
+    if (fetchError) {
+      console.error('Erro ao buscar o produto:', fetchError);
+      return new Response(JSON.stringify({ error: 'Erro ao buscar o produto.' }), { status: 500 });
+    }
 
-    // Atualizar o produto com a nova quantidade da reserva e o timestamp
+    if (!produtosEncontrados || produtosEncontrados.length === 0) {
+      return new Response(JSON.stringify({ error: 'Nenhum produto encontrado com o identificador fornecido.' }), { status: 404 });
+    }
+
+    if (produtosEncontrados.length > 1) {
+      return new Response(JSON.stringify({ error: 'Múltiplos produtos encontrados. Por favor, seja mais específico ou use o código do produto.' }), { status: 400 });
+    }
+
+    const produto = produtosEncontrados[0];
+    const novaReserva = (produto.RESERVA || 0) + reserva;
+
+    if (novaReserva < 0) {
+      return new Response(JSON.stringify({ error: `Não é possível remover a reserva. A reserva atual é de ${produto.RESERVA || 0}.` }), { status: 400 });
+    }
+    
+    const updateData = {
+      RESERVA: novaReserva,
+    };
+
+    // Atualiza o timestamp se uma reserva for adicionada, ou limpa se for zerada.
+    if (reserva > 0) {
+      updateData.reserva_criada_em = new Date().toISOString();
+    } else if (novaReserva === 0) {
+      updateData.reserva_criada_em = null;
+    }
+
     const { error: updateError } = await supabase
       .from('produtos')
-      .update({ 
-        RESERVA: novaReserva,
-        reserva_criada_em: new Date().toISOString() 
-      })
-      .eq('COD', cod);
+      .update(updateData)
+      .eq('COD', produto.COD);
 
     if (updateError) {
       console.error('Erro ao atualizar a reserva no Supabase:', updateError);
       return new Response(JSON.stringify({ error: 'Erro ao atualizar a reserva.' }), { status: 500 });
     }
 
-    return new Response(JSON.stringify({ success: true, message: 'Reserva atualizada com sucesso!' }), { status: 200 });
+    const action = reserva > 0 ? 'criada/atualizada' : 'cancelada';
+    return new Response(JSON.stringify({ success: true, message: `Reserva ${action} com sucesso!` }), { status: 200 });
 
   } catch (error) {
-    console.error('Erro geral na API de criação de reserva:', error);
+    console.error('Erro geral na API de reserva:', error);
     return new Response(JSON.stringify({ error: 'Erro interno do servidor.' }), { status: 500 });
   }
 }
