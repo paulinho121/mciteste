@@ -1,12 +1,13 @@
 'use client';
 import { useState } from 'react'
-import { Search, Plus, Upload } from 'lucide-react'
+import { Search, Plus, Upload, ShoppingCart, Package } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs'
-import BuscaProduto from './components/BuscaProduto'
-import CadastroReserva from './components/CadastroReserva' // Importado
-import UploadPlanilha from './components/UploadPlanilha'
-import ProtectedRoute from './components/ProtectedRoute'
-import Header from './components/Header'
+import BuscaProduto from './components/BuscaProduto.jsx'
+import CadastroReserva from './components/CadastroReserva.jsx'
+import UploadPlanilha from './components/UploadPlanilha.jsx'
+import UploadImportacao from './components/UploadImportacao.jsx' // Corrigido
+import ProtectedRoute from './components/ProtectedRoute.jsx'
+import Header from './components/Header.jsx'
 import './App.css'
 
 export default function App() {
@@ -20,7 +21,7 @@ export default function App() {
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:grid-cols-3">
-              <TabsTrigger value="busca" className="flex items-center gap-2 bg-[#DCDCDC]">
+              <TabsTrigger value="busca" className="flex items-center gap-2">
                 <Search className="h-4 w-4" />
                 <span className="hidden sm:inline">Buscar Produtos</span>
                 <span className="sm:hidden">Buscar</span>
@@ -32,7 +33,7 @@ export default function App() {
               </TabsTrigger>
               <TabsTrigger value="upload" className="flex items-center gap-2">
                 <Upload className="h-4 w-4" />
-                <span className="hidden sm:inline">Upload Planilha</span>
+                <span className="hidden sm:inline">Upload de Dados</span>
                 <span className="sm:hidden">Upload</span>
               </TabsTrigger>
             </TabsList>
@@ -46,7 +47,24 @@ export default function App() {
             </TabsContent>
 
             <TabsContent value="upload" className="space-y-6">
-              <UploadPlanilha />
+              <Tabs defaultValue="estoque" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="estoque" className="flex items-center gap-2">
+                    <ShoppingCart className="h-4 w-4" />
+                    Atualizar Estoque
+                  </TabsTrigger>
+                  <TabsTrigger value="importacao" className="flex items-center gap-2">
+                    <Package className="h-4 w-4" />
+                    Atualizar Importação
+                  </TabsTrigger>
+                </TabsList>
+                <TabsContent value="estoque" className="mt-6">
+                  <UploadPlanilha />
+                </TabsContent>
+                <TabsContent value="importacao" className="mt-6">
+                  <UploadImportacao />
+                </TabsContent>
+              </Tabs>
             </TabsContent>
           </Tabs>
         </main>
