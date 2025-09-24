@@ -66,7 +66,7 @@ export default function BuscaProduto() {
             <Button
               onClick={buscarProdutos}
               disabled={carregando}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-bold"
+              variant="secondary"
             >
               {carregando ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Buscando...</> : 'Buscar'}
             </Button>
@@ -148,7 +148,7 @@ export default function BuscaProduto() {
             </Card>
           ))}
         </div>
-      )}\
+      )}
     </div>
   )
 }
