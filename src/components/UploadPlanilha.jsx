@@ -191,7 +191,7 @@ export default function UploadPlanilha() {
           <Button
             onClick={uploadPlanilha}
             disabled={!arquivo || carregando}
-            className="w-full"
+            className="w-full disabled:text-gray-800"
           >
             {carregando ? 'Processando...' : 'Fazer Upload'}
           </Button>
@@ -207,4 +207,3 @@ export default function UploadPlanilha() {
     </Card>
   )
 }
-
