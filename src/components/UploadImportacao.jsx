@@ -70,7 +70,7 @@ export default function UploadImportacao() {
         })
       }, 200)
 
-      const response = await fetch("/api/sync-importacao", {
+      const response = await fetch("/api/upload-planilha-importacao", {
         method: 'POST',
         body: formData
       })
@@ -87,10 +87,11 @@ export default function UploadImportacao() {
           fileInputRef.current.value = ''
         }
       } else {
-        setErro(data.error || 'Erro ao processar planilha de importação')
+        // Agora exibimos a mensagem de erro específica da API
+        setErro(data.error || 'Erro desconhecido ao processar a planilha.')
       }
     } catch (error) {
-      setErro('Erro de conexão com o servidor')
+      setErro('Não foi possível conectar ao servidor. Verifique sua conexão.')
     } finally {
       setCarregando(false)
       setTimeout(() => setProgresso(0), 1000)
@@ -115,21 +116,31 @@ export default function UploadImportacao() {
       </CardHeader>
       <CardContent className="space-y-4">
         {erro && (
-          <Alert className="border-red-500 bg-red-50">
+          <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription className="text-red-700">
+            <AlertDescription>
               {erro}
             </AlertDescription>
           </Alert>
         )}
 
         {resultado && (
-          <Alert className="border-green-500 bg-green-50">
+          <Alert variant="default">
             <CheckCircle className="h-4 w-4" />
-            <AlertDescription className="text-green-700">
+            <AlertDescription>
               <div className="space-y-1">
                 <p className="font-medium">{resultado.message}</p>
-                 <p>Produtos atualizados com sucesso: {resultado.updatedCount}</p>
+                {resultado.produtos_atualizados > 0 &&
+                    <p>Produtos atualizados com sucesso: {resultado.produtos_atualizados}</p>
+                }
+                {resultado.erros && resultado.erros.length > 0 && (
+                    <div>
+                        <p className="font-bold">Detalhes dos erros:</p>
+                        <ul className="list-disc list-inside text-xs">
+                            {resultado.erros.map((e, index) => <li key={index}>{e}</li>)}
+                        </ul>
+                    </div>
+                )}
               </div>
             </AlertDescription>
           </Alert>

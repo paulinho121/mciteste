@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Search, Package, MapPin } from 'lucide-react'
+import { Search, Package, MapPin, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -47,10 +47,10 @@ export default function BuscaProduto() {
 
   return (
   <div className="space-y-6">
-      <Card className="border-[#DCDCDC]">
+      <Card className="border-gray-200 shadow-sm">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Search className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 text-xl font-semibold">
+            <Search className="h-6 w-6" />
             Buscar Produtos
           </CardTitle>
         </CardHeader>
@@ -61,14 +61,14 @@ export default function BuscaProduto() {
               value={termoBusca}
               onChange={(e) => setTermoBusca(e.target.value)}
               onKeyPress={handleKeyPress}
-              className="flex-1"
+              className="flex-1 text-base"
             />
             <Button
               onClick={buscarProdutos}
               disabled={carregando}
-              className="bg-[#DCDCDC] hover:bg-[#C0C0C0] text-black"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold"
             >
-              {carregando ? 'Buscando...' : 'Buscar'}
+              {carregando ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Buscando...</> : 'Buscar'}
             </Button>
           </div>
           {erro && (
@@ -78,68 +78,68 @@ export default function BuscaProduto() {
       </Card>
 
       {produtos.length > 0 && (
-        <div className="space-y-4 bg-[#DCDCDC] p-4 rounded-lg">
-          <h3 className="text-lg font-semibold">Resultados da Busca</h3>
+        <div className="space-y-4 bg-gray-50 border border-gray-200 p-4 rounded-lg">
+          <h3 className="text-xl font-semibold">Resultados da Busca</h3>
           {produtos.map((produto) => (
-            <Card key={produto.cod} className="hover:shadow-md transition-shadow">
+            <Card key={produto.cod} className="hover:shadow-lg transition-shadow duration-300">
               <CardContent className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <div className="space-y-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="space-y-3">
                     <div className="flex items-center gap-2">
-                      <Package className="h-4 w-4 text-blue-500" />
-                      <span className="font-semibold">Código: {produto.cod}</span>
+                      <Package className="h-5 w-5 text-blue-600" />
+                      <span className="font-semibold text-base">Código: {produto.cod}</span>
                     </div>
-                    <h4 className="font-medium text-lg">{produto.nome_do_produto}</h4>
+                    <h4 className="font-bold text-xl">{produto.nome_do_produto}</h4>
                     {produto.marca && (
-                      <Badge variant="outline">{produto.marca}</Badge>
+                      <Badge variant="secondary">{produto.marca}</Badge>
                     )}
                   </div>
                   
-                  <div className="space-y-2">
-                    <h5 className="font-medium flex items-center gap-2">
-                      <MapPin className="h-4 w-4" />
+                  <div className="space-y-3">
+                    <h5 className="font-semibold text-lg flex items-center gap-2">
+                      <MapPin className="h-5 w-5" />
                       Estoque por Filial
                     </h5>
-                    <div className="space-y-1 text-sm">
-                      <div className="flex justify-between items-center p-2 rounded-md bg-orange-50 border-l-4 border-orange-400">
+                    <div className="space-y-2 text-base">
+                      <div className="flex justify-between items-center p-3 rounded-md bg-orange-50 border-l-4 border-orange-400">
                         <span className="text-orange-800 font-medium">Ceará:</span>
-                        <span className="font-bold text-orange-700 bg-orange-100 px-2 py-1 rounded">{produto.ceara}</span>
+                        <span className="font-bold text-lg text-orange-700 bg-orange-100 px-3 py-1 rounded">{produto.ceara}</span>
                       </div>
-                      <div className="flex justify-between items-center p-2 rounded-md bg-blue-50 border-l-4 border-blue-400">
+                      <div className="flex justify-between items-center p-3 rounded-md bg-blue-50 border-l-4 border-blue-400">
                         <span className="text-blue-800 font-medium">Santa Catarina:</span>
-                        <span className="font-bold text-blue-700 bg-blue-100 px-2 py-1 rounded">{produto.santa_catarina}</span>
+                        <span className="font-bold text-lg text-blue-700 bg-blue-100 px-3 py-1 rounded">{produto.santa_catarina}</span>
                       </div>
-                      <div className="flex justify-between items-center p-2 rounded-md bg-purple-50 border-l-4 border-purple-400">
+                      <div className="flex justify-between items-center p-3 rounded-md bg-purple-50 border-l-4 border-purple-400">
                         <span className="text-purple-800 font-medium">São Paulo:</span>
-                        <span className="font-bold text-purple-700 bg-purple-100 px-2 py-1 rounded">{produto.sao_paulo}</span>
+                        <span className="font-bold text-lg text-purple-700 bg-purple-100 px-3 py-1 rounded">{produto.sao_paulo}</span>
                       </div>
                     </div>
                   </div>
                   
-                  <div className="space-y-2">
-                    <h5 className="font-medium">Totais</h5>
-                    <div className="space-y-1 text-sm">
+                  <div className="space-y-3">
+                    <h5 className="font-semibold text-lg">Totais e Importação</h5>
+                    <div className="space-y-2 text-base">
                       <div className="flex justify-between">
                         <span>Total Geral:</span>
-                        <span className="font-bold text-green-600">{produto.total}</span>
+                        <span className="font-bold text-green-600 text-lg">{produto.total}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Reserva:</span>
-                        <span className="font-bold text-orange-600">{produto.reserva}</span>
+                        <span className="font-bold text-orange-600 text-lg">{produto.reserva}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Disponível:</span>
-                        <span className="font-bold text-blue-600">
+                        <span className="font-bold text-blue-600 text-lg">
                           {produto.total - produto.reserva}
                         </span>
                       </div>
-                      <div className="flex justify-between">
-                        <span>Em importação:</span>
-                        <span className="font-medium text-gray-600">{produto.quantidade_em_importacao}</span>
+                      <div className="flex justify-between border-t pt-2 mt-2">
+                        <span className="font-semibold">Em importação:</span>
+                        <span className="font-bold text-blue-800 text-lg">{produto.quantidade_em_importacao || 0}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span>Data prevista da reposição:</span>
-                        <span className="font-medium text-gray-600">{produto.data_prevista_reposicao}</span>
+                        <span className="font-semibold">Previsão Reposição:</span>
+                        <span className="font-medium text-gray-700">{produto.data_prevista_reposicao || 'N/A'}</span>
                       </div>
                     </div>
                   </div>
@@ -148,7 +148,7 @@ export default function BuscaProduto() {
             </Card>
           ))}
         </div>
-      )}
+      )}\
     </div>
   )
 }
