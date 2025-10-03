@@ -11,7 +11,7 @@ export async function GET(request) {
   try {
     const { data, error } = await supabase
       .from('produtos')
-      .select('*')
+      .select('*') // O select '*' já inclui a nova coluna imagem_url
       .or(`COD.ilike.%${termo}%,"NOME DO PRODUTO".ilike.%${termo}%`);
 
     if (error) {
@@ -19,7 +19,7 @@ export async function GET(request) {
       return new Response(JSON.stringify({ error: 'Erro ao buscar produtos.' }), { status: 500 });
     }
 
-    // Normalizar nomes das chaves para camelCase para consistência com o frontend
+    // Normaliza os dados e inclui o campo da imagem
     let produtosNormalizados = data.map(produto => ({
       cod: produto.COD,
       nome_do_produto: produto['NOME DO PRODUTO'],
@@ -30,12 +30,12 @@ export async function GET(request) {
       total: produto.TOTAL,
       reserva: produto.RESERVA,
       quantidade_em_importacao: produto['QUANTIDADE EM IMPORTAÇÃO'],
-      data_prevista_reposicao: produto['DATA PREVISTA DA REPOSIÇÃO']
+      data_prevista_reposicao: produto['DATA PREVISÃO DE CHEGADA'],
+      imagem_url: produto.imagem_url // Adiciona a URL da imagem ao objeto
     }));
 
-    // Filtrar produtos cujo código termina com ".0"
+    // Filtra para remover entradas duplicadas que terminam com .0
     produtosNormalizados = produtosNormalizados.filter(produto => {
-        // Garantir que o código é uma string antes de verificar
         return typeof produto.cod === 'string' && !produto.cod.endsWith('.0');
     });
 

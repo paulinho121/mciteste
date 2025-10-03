@@ -208,8 +208,8 @@ export default function UploadImportacao() {
 
         <div className="text-sm text-gray-500 space-y-1">
           <p><strong>Formato esperado:</strong></p>
-          <p>• Arquivo CSV com as colunas: COD, Quantidade, data_chegada</p>
-          <p>• A primeira linha deve conter os cabeçalhos.</p>
+          <p>• Arquivo CSV com as colunas: COD, quantidade, data_chegada</p>
+          <p>• Os nomes das colunas não diferenciam maiúsculas de minúsculas.</p>
           <p>• A data deve estar no formato AAAA-MM-DD.</p>
         </div>
       </CardContent>

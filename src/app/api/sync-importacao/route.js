@@ -6,7 +6,7 @@ export async function POST() {
     // 1. Buscar todos os dados da planilha de importação
     const { data: importacaoData, error: importacaoError } = await supabase
       .from('planilha_importacao')
-      .select('COD, Quantidade, data_chegada');
+      .select('COD, quantidade, data_chegada');
 
     if (importacaoError) {
       console.error('Erro ao buscar dados da planilha de importação:', importacaoError);
@@ -17,16 +17,20 @@ export async function POST() {
       return NextResponse.json({ message: 'Nenhum dado de importação para sincronizar.' });
     }
 
-    // 2. Agrupar atualizações para fazer em lote (mais eficiente)
+    // 2. Agrupar atualizações para fazer em lote
     const updates = importacaoData.map(item => {
-        // A coluna na tabela `produtos` se chama `QUANTIDADE EM IMPORTAÇÃO` e `DATA PREVISTA DA REPOSIÇÃO`
-        return supabase
-            .from('produtos')
-            .update({
-                'QUANTIDADE EM IMPORTAÇÃO': item.Quantidade,
-                'DATA PREVISTA DA REPOSIÇÃO': item.data_chegada
-            })
-            .eq('COD', item.COD);
+      const quantidade = parseInt(item.quantidade, 10) || 0;
+
+      // CONVERSÃO: Garante que o COD seja tratado como texto para a busca
+      const codAsString = String(item.COD);
+
+      return supabase
+        .from('produtos')
+        .update({
+          'QUANTIDADE EM IMPORTAÇÃO': quantidade,
+          'DATA PREVISÃO DE CHEGADA': item.data_chegada
+        })
+        .eq('COD', codAsString); // Usa o COD como string na comparação
     });
 
     // 3. Executar todas as atualizações
@@ -36,14 +40,13 @@ export async function POST() {
 
     if (errors.length > 0) {
       console.error('Erros durante a sincronização:', errors.map(e => e.error.message));
-      // Mesmo com erros, alguns podem ter sucesso. Informamos o usuário sobre a falha parcial.
       return NextResponse.json({ message: `Sincronização concluída com ${errors.length} erros.` }, { status: 500 });
     }
 
-    return NextResponse.json({ message: 'Sincronização concluída com sucesso!' });
+    return NextResponse.json({ message: 'Sincronização com a planilha de importação concluída com sucesso!' });
 
   } catch (error) {
-    console.error('Erro fatal na API de sincronização:', error);
-    return NextResponse.json({ message: 'Erro interno crítico do servidor.' }, { status: 500 });
+    console.error('Erro inesperado na função de sincronização:', error);
+    return NextResponse.json({ message: 'Erro inesperado no servidor.' }, { status: 500 });
   }
 }

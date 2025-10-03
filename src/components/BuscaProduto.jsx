@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Search, Package, MapPin, Loader2 } from 'lucide-react'
+import { Search, Package, MapPin, Loader2, Image as ImageIcon } from 'lucide-react' // Importa o ícone de imagem
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -83,7 +83,21 @@ export default function BuscaProduto() {
           {produtos.map((produto) => (
             <Card key={produto.cod} className="hover:shadow-lg transition-shadow duration-300">
               <CardContent className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6"> {/* Alterado para 4 colunas */}
+                  
+                  {/* Coluna da Imagem */}
+                  <div className="flex items-center justify-center bg-gray-100 rounded-lg p-2">
+                    {produto.imagem_url ? (
+                      <img src={produto.imagem_url} alt={`Imagem de ${produto.nome_do_produto}`} className="w-full h-auto object-contain rounded-md" />
+                    ) : (
+                      <div className="flex flex-col items-center justify-center text-gray-400">
+                        <ImageIcon className="h-12 w-12 mb-2" />
+                        <span>Sem imagem</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Coluna de Informações do Produto */}
                   <div className="space-y-3">
                     <div className="flex items-center gap-2">
                       <Package className="h-5 w-5 text-blue-600" />
@@ -95,27 +109,29 @@ export default function BuscaProduto() {
                     )}
                   </div>
                   
+                  {/* Coluna de Estoque */}
                   <div className="space-y-3">
                     <h5 className="font-semibold text-lg flex items-center gap-2">
                       <MapPin className="h-5 w-5" />
                       Estoque por Filial
                     </h5>
                     <div className="space-y-2 text-base">
-                      <div className="flex justify-between items-center p-3 rounded-md bg-orange-50 border-l-4 border-orange-400">
+                      <div className="flex justify-between items-center p-2 rounded-md bg-orange-50 border-l-4 border-orange-400">
                         <span className="text-orange-800 font-medium">Ceará:</span>
-                        <span className="font-bold text-lg text-orange-700 bg-orange-100 px-3 py-1 rounded">{produto.ceara}</span>
+                        <span className="font-bold text-lg text-orange-700">{produto.ceara}</span>
                       </div>
-                      <div className="flex justify-between items-center p-3 rounded-md bg-blue-50 border-l-4 border-blue-400">
+                      <div className="flex justify-between items-center p-2 rounded-md bg-blue-50 border-l-4 border-blue-400">
                         <span className="text-blue-800 font-medium">Santa Catarina:</span>
-                        <span className="font-bold text-lg text-blue-700 bg-blue-100 px-3 py-1 rounded">{produto.santa_catarina}</span>
+                        <span className="font-bold text-lg text-blue-700">{produto.santa_catarina}</span>
                       </div>
-                      <div className="flex justify-between items-center p-3 rounded-md bg-purple-50 border-l-4 border-purple-400">
+                      <div className="flex justify-between items-center p-2 rounded-md bg-purple-50 border-l-4 border-purple-400">
                         <span className="text-purple-800 font-medium">São Paulo:</span>
-                        <span className="font-bold text-lg text-purple-700 bg-purple-100 px-3 py-1 rounded">{produto.sao_paulo}</span>
+                        <span className="font-bold text-lg text-purple-700">{produto.sao_paulo}</span>
                       </div>
                     </div>
                   </div>
                   
+                  {/* Coluna de Totais */}
                   <div className="space-y-3">
                     <h5 className="font-semibold text-lg">Totais e Importação</h5>
                     <div className="space-y-2 text-base">
@@ -125,12 +141,12 @@ export default function BuscaProduto() {
                       </div>
                       <div className="flex justify-between">
                         <span>Reserva:</span>
-                        <span className="font-bold text-orange-600 text-lg">{produto.reserva}</span>
+                        <span className="font-bold text-orange-600 text-lg">{produto.reserva || 0}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Disponível:</span>
                         <span className="font-bold text-blue-600 text-lg">
-                          {produto.total - produto.reserva}
+                          {produto.total - (produto.reserva || 0)}
                         </span>
                       </div>
                       <div className="flex justify-between border-t pt-2 mt-2">

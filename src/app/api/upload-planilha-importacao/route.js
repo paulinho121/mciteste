@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '../../../lib/supabaseClient';
+import { supabase } from '../../../lib/supabase';
 import Papa from 'papaparse';
 
 export async function POST(request) {
@@ -16,12 +16,12 @@ export async function POST(request) {
     const results = Papa.parse(fileContent, {
       header: true,
       skipEmptyLines: true,
+      transformHeader: header => header.toLowerCase().trim(),
     });
 
     const data = results.data;
 
-    // Validação de Cabeçalho
-    const requiredHeaders = ['COD', 'Quantidade', 'data_chegada'];
+    const requiredHeaders = ['cod', 'quantidade', 'data_chegada'];
     const actualHeaders = results.meta.fields;
     if (!requiredHeaders.every(h => actualHeaders.includes(h))) {
         return NextResponse.json({
@@ -34,7 +34,9 @@ export async function POST(request) {
     let codsNaoEncontrados = [];
 
     for (const row of data) {
-      const { COD, Quantidade, data_chegada } = row;
+      const COD = row['cod'];
+      const Quantidade = row['quantidade'];
+      const data_chegada = row['data_chegada'];
 
       if (!COD) {
         console.warn('Linha ignorada: COD não encontrado', row);
@@ -47,22 +49,23 @@ export async function POST(request) {
         continue;
       }
 
-      const { error, count } = await supabase
+      const { data: updatedData, error, count } = await supabase
         .from('produtos')
         .update({
           'QUANTIDADE EM IMPORTAÇÃO': parsedQuantidade,
-          'DATA PREVISTA DA REPOSIÇÃO': data_chegada || null,
+          'DATA PREVISÃO DE CHEGADA': data_chegada || null,
         })
-        .eq('COD', String(COD).trim());
+        .eq('COD', String(COD).trim())
+        .select();
 
       if (error) {
         console.error(`Erro ao atualizar produto ${COD}:`, error.message);
         erros.push(`Produto ${COD}: ${error.message}`);
       } else {
-        if (count === 0) {
-          codsNaoEncontrados.push(COD);
+        if (updatedData && updatedData.length > 0) {
+          produtosAtualizadosCount++;
         } else {
-          produtosAtualizadosCount += count;
+          codsNaoEncontrados.push(COD);
         }
       }
     }
